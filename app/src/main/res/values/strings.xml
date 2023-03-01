@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">StudyApp</string>
+    <string name="search">Search</string>
+    <string name="gif">GIF</string>
+</resources>

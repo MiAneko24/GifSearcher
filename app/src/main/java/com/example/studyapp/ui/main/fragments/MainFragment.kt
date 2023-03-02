@@ -1,25 +1,28 @@
 package com.example.studyapp.ui.main.fragments
 
-import android.icu.lang.UCharacter.VerticalOrientation
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Base64
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.studyapp.R
+import com.example.studyapp.GifSearcherApplication
+import com.example.studyapp.MainFragmentComponent
 import com.example.studyapp.databinding.FragmentMainBinding
-import com.example.studyapp.ui.main.models.GifModelUI
 import com.example.studyapp.ui.main.recycler_elems.GifAdapter
 import com.example.studyapp.ui.main.viewmodels.MainViewModel
+import javax.inject.Inject
 
 class MainFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModel: MainViewModel
+
+    lateinit var fragmentComponent: MainFragmentComponent
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GifAdapter
@@ -32,11 +35,16 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        fragmentComponent = (activity?.application as GifSearcherApplication)
+            .appComponent
+            .mainFragmentComponent()
+            .create(this)
+
+        fragmentComponent.inject(this)
+        viewModel.applyComponent(fragmentComponent)
         // TODO: Use the ViewModel
     }
 
@@ -44,6 +52,15 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.gifs.observe(viewLifecycleOwner) {
+            adapter.replaceGifs(it)
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
 
@@ -73,8 +90,9 @@ class MainFragment : Fragment() {
             Toast.makeText(context, "Нечего искать", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, "Soon there will be search for $searchString", Toast.LENGTH_SHORT).show()
-            adapter.addGif(GifModelUI(Base64.decode("", Base64.DEFAULT)))
+            viewModel.search(searchString)
         }
+
     }
 
     override fun onDestroyView() {

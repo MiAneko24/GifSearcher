@@ -1,6 +1,5 @@
 package com.example.studyapp.ui.main.recycler_elems
 
-import android.graphics.ImageDecoder
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView

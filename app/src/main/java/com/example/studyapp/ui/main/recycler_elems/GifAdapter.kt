@@ -31,8 +31,8 @@ class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
 
     fun replaceGifs(gifs: List<GifModelUI>) {
         val oldCount = gifList.size
-        gifList.addAll(gifs)
         gifList.clear()
+        gifList.addAll(gifs)
         notifyItemRangeRemoved(0, oldCount)
         notifyItemRangeInserted(0, gifs.size)
     }

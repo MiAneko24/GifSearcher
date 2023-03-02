@@ -1,15 +1,13 @@
-package com.example.studyapp.ui.main.models
+package com.example.studyapp.logic.models
 
-import com.example.studyapp.logic.models.GifViewData
-
-data class GifModelUI(
+data class GifViewData(
     val gif: ByteArray
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as GifModelUI
+        other as GifViewData
 
         if (!gif.contentEquals(other.gif)) return false
 
@@ -18,9 +16,5 @@ data class GifModelUI(
 
     override fun hashCode(): Int {
         return gif.contentHashCode()
-    }
-
-    companion object {
-        fun fromModel(model: GifViewData) = GifModelUI(model.gif)
     }
 }

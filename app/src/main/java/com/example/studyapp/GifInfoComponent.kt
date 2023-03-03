@@ -2,24 +2,22 @@ package com.example.studyapp
 
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.studyapp.ui.main.fragments.GifInfoFragment
-import com.example.studyapp.ui.main.fragments.MainFragment
 import com.example.studyapp.ui.main.viewmodels.GifInfoViewModel
-import com.example.studyapp.ui.main.viewmodels.MainViewModel
 import dagger.BindsInstance
 import dagger.Subcomponent
 import javax.inject.Singleton
 
-@Subcomponent(modules = [MainViewModelModule::class] )
-interface MainFragmentComponent {
 
-    fun inject(mainFragment: MainFragment)
+@Subcomponent(modules = [GifInfoViewModelModule::class] )
+interface GifInfoComponent {
 
-    fun inject(mainViewModel: MainViewModel)
+    fun inject(gifInfoViewModel: GifInfoViewModel)
+
+    fun inject(gifInfoFragment: GifInfoFragment)
 
     @Subcomponent.Factory
     interface Factory {
         // With @BindsInstance, the Context passed in will be available in the graph
-        fun create(@BindsInstance owner: ViewModelStoreOwner): MainFragmentComponent
+        fun create(@BindsInstance owner: ViewModelStoreOwner): GifInfoComponent
     }
-
 }

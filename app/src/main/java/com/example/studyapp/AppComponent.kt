@@ -8,4 +8,6 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun mainFragmentComponent(): MainFragmentComponent.Factory
+
+    fun gifInfoComponent(): GifInfoComponent.Factory
 }

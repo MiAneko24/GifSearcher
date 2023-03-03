@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.main.fragments
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -48,11 +49,15 @@ class MainFragment: Fragment(), GifSelectionListener {
         super.onCreate(savedInstanceState)
         Log.d("Creation", "MainFragment OnCreate()")
 
-        fragmentComponent.inject(this)
-        viewModel.applyComponent(fragmentComponent)
-
         setHasOptionsMenu(true)
         // TODO: Use the ViewModel
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        fragmentComponent.inject(this)
+        viewModel.applyComponent(fragmentComponent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -119,8 +124,8 @@ class MainFragment: Fragment(), GifSelectionListener {
     }
 
     override fun selected(position: Int) {
-        viewModel.getGifInfo(position)
-        callback.callback(Action.ShowGifInformation)
+        if (viewModel.setGifPosition(position))
+            callback.callback(Action.ShowGifInformation)
     }
 
 }

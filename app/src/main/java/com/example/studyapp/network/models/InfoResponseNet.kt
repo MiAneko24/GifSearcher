@@ -9,6 +9,9 @@ data class InfoResponseNet(
     val pagination: PaginationNet,
     val meta: MetaNet
 ) {
-    fun toModel(): GifMetadata =
-        data.toMetadata()
+    fun toModel(): GifSearchData =
+        GifSearchData(
+            data.toMetadata(),
+            data.images.toModel()
+        )
 }

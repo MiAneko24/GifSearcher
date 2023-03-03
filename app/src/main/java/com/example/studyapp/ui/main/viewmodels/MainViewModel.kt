@@ -1,15 +1,16 @@
 package com.example.studyapp.ui.main.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studyapp.MainFragmentComponent
+import com.example.studyapp.logic.CurrentGifIdHolder
 import com.example.studyapp.logic.GifLoader
 import com.example.studyapp.network.models.ResultType
 import com.example.studyapp.ui.main.models.GifDataUI
 import com.example.studyapp.ui.main.models.GifModelUI
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +40,11 @@ class MainViewModel : ViewModel() {
     }
 
     fun search(keyword: String) {
-        viewModelScope.launch(Dispatchers.IO)
+        val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+            _searchErrorMessage.postValue(throwable.message)
+        }
+
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler)
         {
                 val searchResult = gifLoader.search(keyword)
                 when (searchResult) {
@@ -54,25 +59,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getGifInfo(position: Int) {
-        Log.d("Single gif", "Listener called successfully")
-//        _getInfoErrorMessage.value = "Not yet implemented"
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            val gifs = gifImages.value
-            if (gifs != null && position > 0 && position < gifs.size) {
-                when (val gif = gifLoader.searchOne(gifs[position].id)) {
-                    is ResultType.Error -> _getInfoErrorMessage.postValue(gif.message)
-                    is ResultType.Ok -> _currentGif.postValue(
-                        GifDataUI.fromModel(
-                            gif.value
-                        )
-                    )
-                }
-            }
+    fun setGifPosition(position: Int): Boolean {
+        val gifs = gifImages.value
+        return if (gifs != null && position > 0 && position < gifs.size) {
+            CurrentGifIdHolder.currentGifId = gifs[position].id
+            true
+        } else {
+            false
         }
-
     }
-
 
 }

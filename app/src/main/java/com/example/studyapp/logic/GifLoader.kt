@@ -51,20 +51,26 @@ class GifLoaderImpl @Inject constructor(
     }
 
     override suspend fun searchOne(id: String): ResultType<GifData> {
+        Log.d("Tag", "In searchOne")
         return when (val gifData = gifInfoAPI.getInformation(id)) {
             is ResultType.Error -> {
                 Log.e("Gif", "Get Info failed")
                 ResultType.Error(gifData.message)
             }
             is ResultType.Ok -> {
-                when (val gifBody = gifLoad.loadGif(gifData.value.url)) {
+
+                Log.d("Net", "Download link: ${gifData.value.image.url}")
+                when (val gifBody = gifLoad.loadGif(gifData.value.image.url)) {
                     is ResultType.Error -> {
                         Log.e("Gif", "Could not load body for certain gif info")
                         ResultType.Error(gifBody.message)
                     }
-                    is ResultType.Ok -> ResultType.Ok(
-                        GifData(gifData.value, gifBody.value)
-                    )
+                    is ResultType.Ok -> {
+                        Log.d("Net", "We've got body")
+                        ResultType.Ok(
+                            GifData(gifData.value.metadata, gifBody.value)
+                        )
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.main.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -7,17 +8,19 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.studyapp.AppComponent
+import com.example.studyapp.GifInfoComponent
 import com.example.studyapp.MainFragmentComponent
 import com.example.studyapp.R
 import com.example.studyapp.databinding.GifInfoFragmentBinding
+import com.example.studyapp.ui.main.viewmodels.GifInfoViewModel
 import com.example.studyapp.ui.main.viewmodels.MainViewModel
 import javax.inject.Inject
 
 class GifInfoFragment: Fragment() {
     @Inject
-    lateinit var viewModel: MainViewModel
+    lateinit var viewModel: GifInfoViewModel
 
-    private lateinit var fragmentComponent: MainFragmentComponent
+    private lateinit var fragmentComponent: GifInfoComponent
 
 
     private var _binding: GifInfoFragmentBinding? = null
@@ -29,18 +32,21 @@ class GifInfoFragment: Fragment() {
     }
 
     fun setDI(appComponent: AppComponent) {
-        fragmentComponent = appComponent.mainFragmentComponent().create(this)
+        fragmentComponent = appComponent.gifInfoComponent().create(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("Creation", "GifInfo OnCreate()")
 
+        setHasOptionsMenu(true)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         fragmentComponent.inject(this)
         viewModel.applyComponent(fragmentComponent)
-
-        setHasOptionsMenu(true)
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -52,23 +58,27 @@ class GifInfoFragment: Fragment() {
             if (it.isNotEmpty())
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
+        _binding = GifInfoFragmentBinding.inflate(inflater, container, false)
 
         viewModel.currentGif.observe(viewLifecycleOwner) {
-            Glide.with(binding.gifView).load(it.gif).into(binding.gifView)
-            binding.idValue.text = it.gifMetadataUI.id
-            binding.titleValue.text = it.gifMetadataUI.title
-            binding.urlValue.text = it.gifMetadataUI.url
-            binding.ratingValue.text = it.gifMetadataUI.rating
-            binding.sourceValue.text = it.gifMetadataUI.source
-            binding.typeValue.text = it.gifMetadataUI.type
-            binding.userValue.text = it.gifMetadataUI.username
-            binding.stickerValue.text = it.gifMetadataUI.isSticker.toString()
-            binding.importValue.text = it.gifMetadataUI.importDatetime.toString()
-            binding.trendingValue.text = it.gifMetadataUI.trendingDatetime.toString()
-            binding.appToolbarGifLayout.appToolbar.title = it.gifMetadataUI.title
+            Log.d("Net", "CurrentGif changed")
+            if (it.gif.isNotEmpty()) {
+                binding.idValue.text = it.gifMetadataUI.id
+                binding.titleValue.text = it.gifMetadataUI.title
+                binding.urlValue.text = it.gifMetadataUI.url
+                binding.ratingValue.text = it.gifMetadataUI.rating
+                binding.sourceValue.text = it.gifMetadataUI.source
+                binding.typeValue.text = it.gifMetadataUI.type
+                binding.userValue.text = it.gifMetadataUI.username
+                binding.stickerValue.text = it.gifMetadataUI.isSticker.toString()
+                binding.importValue.text = it.gifMetadataUI.importDatetime.toString()
+                binding.trendingValue.text = it.gifMetadataUI.trendingDatetime.toString()
+                binding.appToolbarGifLayout.appToolbar.title = it.gifMetadataUI.title
+                Glide.with(binding.gifView).load(it.gif).into(binding.gifView)
+            }
         }
 
-        _binding = GifInfoFragmentBinding.inflate(inflater, container, false)
+        viewModel.getGifInfo()
 
         return binding.root
     }

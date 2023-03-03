@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.studyapp.Info
 import com.example.studyapp.logic.models.GifData
 import com.example.studyapp.logic.models.GifMetadata
+import com.example.studyapp.logic.models.GifSearchData
 import com.example.studyapp.network.models.InfoResponseNet
 import com.example.studyapp.network.models.ResponseNet
 import com.example.studyapp.network.models.ResultType
@@ -13,14 +14,14 @@ import okhttp3.Request
 import javax.inject.Inject
 
 interface GifInfoAPI {
-    suspend fun getInformation(id: String): ResultType<GifMetadata>
+    suspend fun getInformation(id: String): ResultType<GifSearchData>
 }
 
 class GifInfoAPIImpl @Inject constructor(
     @Info val client: OkHttpClient,
     val gson: Gson
 ): GifInfoAPI {
-    override suspend fun getInformation(id: String): ResultType<GifMetadata> {
+    override suspend fun getInformation(id: String): ResultType<GifSearchData> {
         return try {
             Log.d("Net", "Getting info for $id")
 

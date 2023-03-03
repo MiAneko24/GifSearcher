@@ -21,6 +21,12 @@ class NetworkModule {
     }
 
     @Provides
+    @Info
+    fun bindInfoOkHttpClient(): OkHttpClient {
+        return OkHttpClient()
+    }
+
+    @Provides
     fun provideGson(): Gson =
         GsonBuilder()
             .setDateFormat("yyy-MM-dd HH:mm:ss")

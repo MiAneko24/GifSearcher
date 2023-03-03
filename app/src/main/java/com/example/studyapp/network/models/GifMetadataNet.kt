@@ -1,6 +1,7 @@
 package com.example.studyapp.network.models
 
 import com.example.studyapp.logic.models.GifMetadata
+import com.example.studyapp.logic.models.GifSearchData
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
@@ -45,7 +46,24 @@ data class GifMetadataNet(
 //    @SerializedName("analytics_response_payload")
 //    val analyticsResponsePayload: String
 ) {
-    fun toModel(): GifMetadata =
+    fun toModel(): GifSearchData =
+        GifSearchData(
+            GifMetadata(
+                type,
+                id,
+                url,
+                username,
+                source,
+                title,
+                rating,
+                isSticker,
+                importDatetime,
+                trendingDatetime
+            ),
+            images.toModel()
+        )
+
+    fun toMetadata(): GifMetadata =
         GifMetadata(
             type,
             id,
@@ -56,7 +74,6 @@ data class GifMetadataNet(
             rating,
             isSticker,
             importDatetime,
-            trendingDatetime,
-            images.toModel()
+            trendingDatetime
         )
 }

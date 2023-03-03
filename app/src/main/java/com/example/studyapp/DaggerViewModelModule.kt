@@ -4,10 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.studyapp.logic.GifLoader
 import com.example.studyapp.logic.GifLoaderImpl
-import com.example.studyapp.network.GifLoadAPI
-import com.example.studyapp.network.GifLoadAPIImpl
-import com.example.studyapp.network.GifSearchAPI
-import com.example.studyapp.network.GifSearchAPIImpl
+import com.example.studyapp.network.*
 import com.example.studyapp.ui.main.viewmodels.MainViewModel
 import dagger.Binds
 import dagger.Module
@@ -24,10 +21,13 @@ class DaggerViewModelModule {
 interface ViewModelBinds {
 
     @Binds
-    fun provideGifLoadAPI(gifLoad: GifLoadAPIImpl): GifLoadAPI
+    fun provideGifVideoAPI(gifLoad: GifVideoAPIImpl): GifVideoAPI
 
     @Binds
     fun provideGifSearchAPI(gifSearch: GifSearchAPIImpl): GifSearchAPI
+
+    @Binds
+    fun provideGifInfoAPI(gifInfoAPI: GifInfoAPIImpl): GifInfoAPI
 
     @Binds
     fun provideGifLoader(gifLoader: GifLoaderImpl): GifLoader

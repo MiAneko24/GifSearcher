@@ -1,7 +1,7 @@
 package com.example.studyapp.network
 
 import com.example.studyapp.Search
-import com.example.studyapp.logic.models.GifMetadata
+import com.example.studyapp.logic.models.GifSearchData
 import com.example.studyapp.network.models.ResponseNet
 import com.example.studyapp.network.models.ResultType
 import com.google.gson.Gson
@@ -9,7 +9,7 @@ import okhttp3.*
 import javax.inject.Inject
 
 interface GifSearchAPI {
-    suspend fun search(keyword: String): ResultType<List<GifMetadata>>
+    suspend fun search(keyword: String): ResultType<List<GifSearchData>>
 }
 
 class GifSearchAPIImpl @Inject constructor(
@@ -17,7 +17,7 @@ class GifSearchAPIImpl @Inject constructor(
     val gson: Gson
 ) : GifSearchAPI {
 
-    override suspend fun search(keyword: String): ResultType<List<GifMetadata>> {
+    override suspend fun search(keyword: String): ResultType<List<GifSearchData>> {
         val key  = keyword.replace(' ', '+')
         return try {
             val request = Request.Builder()

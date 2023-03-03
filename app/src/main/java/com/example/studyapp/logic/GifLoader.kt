@@ -1,8 +1,10 @@
 package com.example.studyapp.logic
 
+import android.util.Log
 import com.example.studyapp.logic.models.GifData
 import com.example.studyapp.logic.models.GifViewData
-import com.example.studyapp.network.GifLoadAPI
+import com.example.studyapp.network.GifInfoAPI
+import com.example.studyapp.network.GifVideoAPI
 import com.example.studyapp.network.GifSearchAPI
 import com.example.studyapp.network.models.ResultType
 import kotlinx.coroutines.async
@@ -22,17 +24,24 @@ suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineSco
 
 class GifLoaderImpl @Inject constructor(
     val gifSearch: GifSearchAPI,
-    val gifLoad: GifLoadAPI
+    val gifLoad: GifVideoAPI,
+    val gifInfoAPI: GifInfoAPI
 ): GifLoader {
     override suspend fun search(keyword: String): ResultType<List<GifViewData>> {
         return when (val gifsData = gifSearch.search(keyword)) {
-            is ResultType.Error -> ResultType.Error(gifsData.message)
+            is ResultType.Error -> {
+                Log.e("Gif", "Search failed")
+                ResultType.Error(gifsData.message)
+            }
             is ResultType.Ok -> {
                 val bodies =
                     gifsData.value.pmap {
                             when (val gifBody = gifLoad.loadGif(it.image.url)) {
-                                is ResultType.Error -> null
-                                is ResultType.Ok -> GifViewData(it.id, gifBody.value)
+                                is ResultType.Error -> {
+                                    Log.e("Gif", "Could not load certain gif info")
+                                    null
+                                }
+                                is ResultType.Ok -> GifViewData(it.metadata.id, gifBody.value)
                             }
                     }
                 ResultType.Ok(bodies.filterNotNull())
@@ -42,6 +51,22 @@ class GifLoaderImpl @Inject constructor(
     }
 
     override suspend fun searchOne(id: String): ResultType<GifData> {
-        TODO("Not yet implemented")
+        return when (val gifData = gifInfoAPI.getInformation(id)) {
+            is ResultType.Error -> {
+                Log.e("Gif", "Get Info failed")
+                ResultType.Error(gifData.message)
+            }
+            is ResultType.Ok -> {
+                when (val gifBody = gifLoad.loadGif(gifData.value.url)) {
+                    is ResultType.Error -> {
+                        Log.e("Gif", "Could not load body for certain gif info")
+                        ResultType.Error(gifBody.message)
+                    }
+                    is ResultType.Ok -> ResultType.Ok(
+                        GifData(gifData.value, gifBody.value)
+                    )
+                }
+            }
+        }
     }
 }

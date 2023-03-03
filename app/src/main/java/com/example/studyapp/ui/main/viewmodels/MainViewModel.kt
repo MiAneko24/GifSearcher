@@ -23,10 +23,9 @@ class MainViewModel : ViewModel() {
         MutableLiveData(listOf())
     val gifImages: LiveData<List<GifModelUI>> = _gifImages
 
-    private val _currentGif: MutableLiveData<ResultType<GifDataUI>> =
-        MutableLiveData(ResultType.Error("No gif yet"))
-    val currentGif: LiveData<ResultType<GifDataUI>> = _currentGif
-
+    private val _currentGif: MutableLiveData<GifDataUI> =
+        MutableLiveData(GifDataUI())
+    val currentGif: LiveData<GifDataUI> = _currentGif
 
     private val _searchErrorMessage: MutableLiveData<String> = MutableLiveData("")
     val searchErrorMessage: LiveData<String> = _searchErrorMessage
@@ -57,7 +56,21 @@ class MainViewModel : ViewModel() {
 
     fun getGifInfo(position: Int) {
         Log.d("Single gif", "Listener called successfully")
-        _getInfoErrorMessage.value = "Not yet implemented"
+//        _getInfoErrorMessage.value = "Not yet implemented"
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val gifs = gifImages.value
+            if (gifs != null && position > 0 && position < gifs.size) {
+                when (val gif = gifLoader.searchOne(gifs[position].id)) {
+                    is ResultType.Error -> _getInfoErrorMessage.postValue(gif.message)
+                    is ResultType.Ok -> _currentGif.postValue(
+                        GifDataUI.fromModel(
+                            gif.value
+                        )
+                    )
+                }
+            }
+        }
 
     }
 

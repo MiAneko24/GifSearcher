@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.main.recycler_elems
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
+        Log.d("Recycler", "Current position is $position")
         val gif = gifList[position]
         holder.bind(gif) {
             gifSelectionListener.selected(position)

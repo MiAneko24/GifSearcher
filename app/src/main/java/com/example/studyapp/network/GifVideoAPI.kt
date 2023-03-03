@@ -6,13 +6,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import javax.inject.Inject
 
-interface GifLoadAPI {
+interface GifVideoAPI {
     suspend fun loadGif(url: String): ResultType<ByteArray>
 }
 
-class GifLoadAPIImpl @Inject constructor(
+class GifVideoAPIImpl @Inject constructor(
     @Load val client: OkHttpClient
-): GifLoadAPI {
+): GifVideoAPI {
     override suspend fun loadGif(url: String): ResultType<ByteArray> {
         return try {
             val request = Request.Builder()

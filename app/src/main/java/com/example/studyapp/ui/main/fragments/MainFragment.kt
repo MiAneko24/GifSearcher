@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.main.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -15,29 +16,32 @@ import com.example.studyapp.ui.main.recycler_elems.GifAdapter
 import com.example.studyapp.ui.main.viewmodels.MainViewModel
 import javax.inject.Inject
 
-class MainFragment(
-    appComponent: AppComponent,
-    private val callback: FragmentStateChangeCallback
-) : Fragment(), GifSelectionListener {
+
+class MainFragment: Fragment(), GifSelectionListener {
 
     @Inject
     lateinit var viewModel: MainViewModel
 
-    private val fragmentComponent: MainFragmentComponent =
-        appComponent.mainFragmentComponent().create(this)
+    private lateinit var fragmentComponent: MainFragmentComponent
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GifAdapter
+    private lateinit var callback: FragmentStateChangeCallback
 
     private var _binding: FragmentMainBinding? = null
 
     private val binding get() = _binding!!
 
     companion object {
-        fun newInstance(
-            component: AppComponent,
-            callback: FragmentStateChangeCallback
-        ) = MainFragment(component, callback)
+        fun newInstance() = MainFragment()
+    }
+
+    fun setDI(appComponent: AppComponent) {
+        fragmentComponent = appComponent.mainFragmentComponent().create(this)
+    }
+
+    fun setCallback(stateChangeCallback: FragmentStateChangeCallback) {
+        callback = stateChangeCallback
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +69,8 @@ class MainFragment(
         }
 
         viewModel.searchErrorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            if (it.isNotEmpty())
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
@@ -93,7 +98,8 @@ class MainFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.appToolbar.appToolbar.inflateMenu(R.menu.appbar_menu)
+        binding.appToolbarLayout.appToolbar.inflateMenu(R.menu.appbar_menu)
+        binding.appToolbarLayout.appToolbar.title = getString(R.string.app_name)
     }
 
     fun search(textView: TextView) {

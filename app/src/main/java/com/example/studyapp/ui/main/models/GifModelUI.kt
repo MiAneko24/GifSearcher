@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.main.models
 
+import com.example.studyapp.logic.models.GifData
 import com.example.studyapp.logic.models.GifViewData
 
 data class GifModelUI(

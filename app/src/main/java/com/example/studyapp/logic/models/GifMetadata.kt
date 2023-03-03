@@ -1,6 +1,5 @@
 package com.example.studyapp.logic.models
 
-import com.example.studyapp.ui.main.models.GifModelUI
 import java.util.*
 
 data class GifMetadata(
@@ -13,6 +12,5 @@ data class GifMetadata(
     val rating: String,
     val isSticker: Int,
     val importDatetime: Date,
-    val trendingDatetime: Date,
-    val image: ImageMetadata,
+    val trendingDatetime: Date
 )

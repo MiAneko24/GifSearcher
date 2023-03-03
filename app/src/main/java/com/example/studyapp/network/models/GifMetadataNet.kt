@@ -8,29 +8,29 @@ data class GifMetadataNet(
     val type: String,
     val id: String,
     val url: String,
-    val slug: String,
+//    val slug: String,
 
-    @SerializedName("bitly_gif_url")
-    val bitlyGifUrl: String,
+//    @SerializedName("bitly_gif_url")
+//    val bitlyGifUrl: String,
 
-    @SerializedName("bitly_url")
-    val bitlyUrl: String,
-
-    @SerializedName("embed_url")
-    val embedUrl: String,
+//    @SerializedName("bitly_url")
+//    val bitlyUrl: String,
+//
+//    @SerializedName("embed_url")
+//    val embedUrl: String,
     val username: String,
     val source: String,
     val title: String,
     val rating: String,
 
-    @SerializedName("content_url")
-    val contentUrl: String,
-
-    @SerializedName("source_tld")
-    val sourceTld: String,
-
-    @SerializedName("source_post_url")
-    val sourcePostUrl: String,
+//    @SerializedName("content_url")
+//    val contentUrl: String,
+//
+//    @SerializedName("source_tld")
+//    val sourceTld: String,
+//
+//    @SerializedName("source_post_url")
+//    val sourcePostUrl: String,
 
     @SerializedName("is_sticker")
     val isSticker: Int,
@@ -42,8 +42,8 @@ data class GifMetadataNet(
     val trendingDatetime: Date,
     val images: ImagesDataHolderNet,
 
-    @SerializedName("analytics_response_payload")
-    val analyticsResponsePayload: String
+//    @SerializedName("analytics_response_payload")
+//    val analyticsResponsePayload: String
 ) {
     fun toModel(): GifMetadata =
         GifMetadata(

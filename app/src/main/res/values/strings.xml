@@ -1,5 +1,19 @@
 <resources>
-    <string name="app_name">StudyApp</string>
+    <string name="app_name">GifSearcher</string>
     <string name="search">Search</string>
     <string name="gif">GIF</string>
+    <string name="about">About</string>
+    <string name="previous_page">Previous page</string>
+    <string name="id">ID:</string>
+    <string name="type_label">Type:</string>
+    <string name="rating_label">Rating:</string>
+    <string name="title_label">Title:</string>
+    <string name="username_label">Username:</string>
+    <string name="is_sticker_label">Is sticker:</string>
+    <string name="url_label">Url:</string>
+    <string name="url_example">https://google.com</string>
+    <string name="source_label">Source:</string>
+    <string name="import_datetime_label">Import datetime:</string>
+    <string name="trending_datetime_label">Trending datetime:</string>
+    <string name="gif_info">GifInfo</string>
 </resources>

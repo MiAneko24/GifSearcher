@@ -3,6 +3,7 @@ package com.example.studyapp.ui.main.models
 import com.example.studyapp.logic.models.GifViewData
 
 data class GifModelUI(
+    val id: String,
     val gif: ByteArray
 ) {
     override fun equals(other: Any?): Boolean {
@@ -21,6 +22,6 @@ data class GifModelUI(
     }
 
     companion object {
-        fun fromModel(model: GifViewData) = GifModelUI(model.gif)
+        fun fromModel(model: GifViewData) = GifModelUI(model.id, model.gif)
     }
 }

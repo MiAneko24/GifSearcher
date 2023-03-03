@@ -1,18 +1,17 @@
 package com.example.studyapp.logic.models
 
-import com.example.studyapp.ui.main.models.GifModelUI
 import java.util.*
 
-data class GifMetadata(
-    val type: String,
+data class GifData(
     val id: String,
+    val type: String,
+    val rating: String,
+    val title: String,
+    val isSticker: Int,
     val url: String,
     val username: String,
     val source: String,
-    val title: String,
-    val rating: String,
-    val isSticker: Int,
     val importDatetime: Date,
     val trendingDatetime: Date,
-    val image: ImageMetadata,
+    val gif: ByteArray
 )

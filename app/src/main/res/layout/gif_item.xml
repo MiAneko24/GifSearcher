@@ -10,7 +10,6 @@
         android:id="@+id/gif_view"
         android:layout_width="168dp"
         android:layout_height="168dp"
-        android:background="@color/teal_200"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:contentDescription="@string/gif" />

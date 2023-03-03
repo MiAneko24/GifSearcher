@@ -1,6 +1,7 @@
 package com.example.studyapp
 
 import androidx.lifecycle.ViewModelStoreOwner
+import com.example.studyapp.ui.main.fragments.GifInfoFragment
 import com.example.studyapp.ui.main.fragments.MainFragment
 import com.example.studyapp.ui.main.viewmodels.MainViewModel
 import dagger.BindsInstance
@@ -12,6 +13,8 @@ interface MainFragmentComponent {
     fun inject(mainFragment: MainFragment)
 
     fun inject(mainViewModel: MainViewModel)
+
+    fun inject(gifInfoFragment: GifInfoFragment)
 
     @Subcomponent.Factory
     interface Factory {

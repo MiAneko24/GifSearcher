@@ -1,13 +1,16 @@
 package com.example.studyapp.ui.main.recycler_elems
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studyapp.GifSelectionListener
 import com.example.studyapp.R
 import com.example.studyapp.ui.main.models.GifModelUI
 
 class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
     private val gifList: MutableList<GifModelUI> = mutableListOf()
+    private lateinit var gifSelectionListener: GifSelectionListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.gif_item, parent, false)
@@ -16,7 +19,9 @@ class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val gif = gifList[position]
-        holder.bind(gif)
+        holder.bind(gif) {
+            gifSelectionListener.selected(position)
+        }
     }
 
     fun addGif(gif: GifModelUI) {
@@ -39,5 +44,9 @@ class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
 
     override fun getItemCount(): Int {
         return gifList.size
+    }
+
+    fun setGifSelectionListener(listener: GifSelectionListener) {
+        gifSelectionListener = listener
     }
 }

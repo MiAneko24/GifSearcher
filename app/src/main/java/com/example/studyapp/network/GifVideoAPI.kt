@@ -1,7 +1,7 @@
 package com.example.studyapp.network
 
-import com.example.studyapp.Load
-import com.example.studyapp.network.models.ResultType
+import com.example.studyapp.di.Load
+import com.example.studyapp.ResultType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import javax.inject.Inject

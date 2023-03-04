@@ -1,13 +1,10 @@
 package com.example.studyapp.network
 
 import android.util.Log
-import com.example.studyapp.Info
-import com.example.studyapp.logic.models.GifData
-import com.example.studyapp.logic.models.GifMetadata
+import com.example.studyapp.di.Info
 import com.example.studyapp.logic.models.GifSearchData
 import com.example.studyapp.network.models.InfoResponseNet
-import com.example.studyapp.network.models.ResponseNet
-import com.example.studyapp.network.models.ResultType
+import com.example.studyapp.ResultType
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request

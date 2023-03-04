@@ -6,7 +6,7 @@ import com.example.studyapp.logic.models.GifViewData
 import com.example.studyapp.network.GifInfoAPI
 import com.example.studyapp.network.GifVideoAPI
 import com.example.studyapp.network.GifSearchAPI
-import com.example.studyapp.network.models.ResultType
+import com.example.studyapp.ResultType
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

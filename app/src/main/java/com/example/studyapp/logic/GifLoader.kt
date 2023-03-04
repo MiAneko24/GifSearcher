@@ -7,13 +7,15 @@ import com.example.studyapp.network.GifInfoAPI
 import com.example.studyapp.network.GifVideoAPI
 import com.example.studyapp.network.GifSearchAPI
 import com.example.studyapp.ResultType
+import com.example.studyapp.logic.models.SearchRequest
+import com.example.studyapp.network.models.SearchRequestNet
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 interface GifLoader {
-    suspend fun search(keyword: String): ResultType<List<GifViewData>>
+    suspend fun search(searchRequest: SearchRequest): ResultType<List<GifViewData>>
 
     suspend fun searchOne(id: String): ResultType<GifData>
 }
@@ -26,9 +28,9 @@ class GifLoaderImpl @Inject constructor(
     val gifSearch: GifSearchAPI,
     val gifLoad: GifVideoAPI,
     val gifInfoAPI: GifInfoAPI
-): GifLoader {
-    override suspend fun search(keyword: String): ResultType<List<GifViewData>> {
-        return when (val gifsData = gifSearch.search(keyword)) {
+) : GifLoader {
+    override suspend fun search(searchRequest: SearchRequest): ResultType<List<GifViewData>> {
+        return when (val gifsData = gifSearch.search(SearchRequestNet.fromModel(searchRequest))) {
             is ResultType.Error -> {
                 Log.e("Gif", "Search failed")
                 ResultType.Error(gifsData.message)
@@ -36,13 +38,13 @@ class GifLoaderImpl @Inject constructor(
             is ResultType.Ok -> {
                 val bodies =
                     gifsData.value.pmap {
-                            when (val gifBody = gifLoad.loadGif(it.image.url)) {
-                                is ResultType.Error -> {
-                                    Log.e("Gif", "Could not load certain gif info")
-                                    null
-                                }
-                                is ResultType.Ok -> GifViewData(it.metadata.id, gifBody.value)
+                        when (val gifBody = gifLoad.loadGif(it.image.url)) {
+                            is ResultType.Error -> {
+                                Log.e("Gif", "Could not load certain gif info")
+                                null
                             }
+                            is ResultType.Ok -> GifViewData(it.metadata.id, gifBody.value)
+                        }
                     }
                 ResultType.Ok(bodies.filterNotNull())
             }

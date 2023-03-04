@@ -18,13 +18,14 @@ import com.example.studyapp.di.search.components.SearchComponent
 import com.example.studyapp.ui.callbacks.CloseKeyboardCallback
 import com.example.studyapp.ui.callbacks.FragmentStateChangeCallback
 import com.example.studyapp.ui.callbacks.SetupToolbarCallback
+import com.example.studyapp.ui.models.SearchRequestUI
 import com.example.studyapp.ui.search.GifSelectionListener
 import com.example.studyapp.ui.search.recycler_elems.GifAdapter
 import com.example.studyapp.ui.search.viewmodels.MainViewModel
 import javax.inject.Inject
 
 
-class SearchFragment: Fragment(), GifSelectionListener {
+class SearchFragment : Fragment(), GifSelectionListener {
 
     @Inject
     lateinit var viewModel: MainViewModel
@@ -54,7 +55,6 @@ class SearchFragment: Fragment(), GifSelectionListener {
         toolbarCallback = setupToolbarCallback
         keyboardCallback = closeKeyboardCallback
     }
-
 
 
     override fun onAttach(context: Context) {
@@ -111,7 +111,8 @@ class SearchFragment: Fragment(), GifSelectionListener {
     private fun checkCallbacks() {
         if (!this::toolbarCallback.isInitialized ||
             !this::stateCallback.isInitialized ||
-            !this::keyboardCallback.isInitialized) {
+            !this::keyboardCallback.isInitialized
+        ) {
             val _activity = activity as MainActivity
             setCallbacks(
                 _activity,
@@ -126,7 +127,7 @@ class SearchFragment: Fragment(), GifSelectionListener {
         toolbarCallback.setTitle(getString(R.string.app_name))
     }
 
-    fun setupRecyclerView(inflater: LayoutInflater, container: ViewGroup?) {
+    private fun setupRecyclerView(inflater: LayoutInflater, container: ViewGroup?) {
         _binding = SearchFragmentBinding.inflate(inflater, container, false)
 
         recyclerView = binding.recyclerContainer
@@ -145,7 +146,7 @@ class SearchFragment: Fragment(), GifSelectionListener {
             keyboardCallback.close()
             binding.searchInProgressLayout.visibility = View.VISIBLE
             Toast.makeText(context, "Loading", Toast.LENGTH_LONG).show()
-            viewModel.search(searchString)
+            viewModel.search(SearchRequestUI(searchString))
         }
     }
 

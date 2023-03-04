@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.example.studyapp.*
 import com.example.studyapp.databinding.SearchFragmentBinding
 import com.example.studyapp.di.search.components.SearchComponent
@@ -76,6 +77,11 @@ class SearchFragment: Fragment(), GifSelectionListener {
         savedInstanceState: Bundle?
     ): View {
         viewModel.gifImages.observe(viewLifecycleOwner) {
+            if (binding.searchInProgressLayout.visibility == View.VISIBLE) {
+                binding.searchInProgressLayout.visibility = View.GONE
+                binding.recyclerContainer.visibility = View.VISIBLE
+            }
+
             adapter.replaceGifs(it)
         }
 
@@ -118,6 +124,7 @@ class SearchFragment: Fragment(), GifSelectionListener {
         if (searchString.isEmpty()) {
             Toast.makeText(context, "Нечего искать", Toast.LENGTH_SHORT).show()
         } else {
+            binding.searchInProgressLayout.visibility = View.VISIBLE
             Toast.makeText(context, "Soon there will be search for $searchString", Toast.LENGTH_SHORT).show()
             viewModel.search(searchString)
         }

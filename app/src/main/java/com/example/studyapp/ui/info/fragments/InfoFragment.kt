@@ -65,6 +65,7 @@ class InfoFragment: Fragment() {
         viewModel.currentGif.observe(viewLifecycleOwner) {
             Log.d("Net", "CurrentGif changed")
             if (it.gif.isNotEmpty()) {
+                binding.gifView.setBackgroundResource(0)
                 binding.idValue.text = it.gifMetadataUI.id
                 binding.titleValue.text = it.gifMetadataUI.title
                 binding.urlValue.text = it.gifMetadataUI.url

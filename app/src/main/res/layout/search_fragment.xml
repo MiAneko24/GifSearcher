@@ -30,6 +30,7 @@
             android:gravity="center_vertical"
             android:hint="@string/search"
             android:textSize="20sp"
+            android:layout_marginRight="8dp"
             android:imeOptions="actionSearch"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintWidth_percent="0.7"
@@ -39,17 +40,71 @@
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.3"
             android:layout_marginHorizontal="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/input"
             android:text="@string/search"
-            android:textSize="16sp"
+            android:textSize="@dimen/usual_text_size"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_in_progress_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintVertical_chainStyle="spread">
+
+        <include
+            android:id="@+id/fake_layout_1"
+            layout="@layout/search_in_progress_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <include
+            android:id="@+id/fake_layout_2"
+            layout="@layout/search_in_progress_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fake_layout_1" />
+
+        <include
+            android:id="@+id/fake_layout_3"
+            layout="@layout/search_in_progress_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fake_layout_2" />
+
+        <include
+            android:id="@+id/fake_layout_4"
+            layout="@layout/search_in_progress_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fake_layout_3" />
+
+        <include
+            android:id="@+id/fake_layout_5"
+            layout="@layout/search_in_progress_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fake_layout_4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_container"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/search_bar"
         app:layout_constraintBottom_toBottomOf="parent"

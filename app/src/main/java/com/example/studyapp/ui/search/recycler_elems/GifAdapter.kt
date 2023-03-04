@@ -8,7 +8,7 @@ import com.example.studyapp.ui.search.GifSelectionListener
 import com.example.studyapp.R
 import com.example.studyapp.ui.models.GifModelUI
 
-class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
+class GifAdapter : RecyclerView.Adapter<GifViewHolder>() {
     private val gifList: MutableList<GifModelUI> = mutableListOf()
     private lateinit var gifSelectionListener: GifSelectionListener
 
@@ -25,22 +25,23 @@ class GifAdapter: RecyclerView.Adapter<GifViewHolder>() {
         }
     }
 
-    fun addGif(gif: GifModelUI) {
-        gifList.add(gif)
-        notifyItemRangeInserted(gifList.size - 1, 1)
-    }
-
-    fun addGifs(gifs: List<GifModelUI>) {
+    private fun addGifs(gifs: List<GifModelUI>) {
+        val gifPos = gifList.size
+        gifList.clear()
         gifList.addAll(gifs)
-        notifyItemRangeInserted(gifList.size - gifs.size, gifs.size)
+        notifyItemRangeInserted(gifPos, gifs.size - gifPos)
     }
 
     fun replaceGifs(gifs: List<GifModelUI>) {
-        val oldCount = gifList.size
-        gifList.clear()
-        gifList.addAll(gifs)
-        notifyItemRangeRemoved(0, oldCount)
-        notifyItemRangeInserted(0, gifs.size)
+        if (gifs.containsAll(gifList)) {
+            addGifs(gifs)
+        } else {
+            val oldCount = gifList.size
+            gifList.clear()
+            gifList.addAll(gifs)
+            notifyItemRangeRemoved(0, oldCount)
+            notifyItemRangeInserted(0, gifs.size)
+        }
     }
 
     override fun getItemCount(): Int {

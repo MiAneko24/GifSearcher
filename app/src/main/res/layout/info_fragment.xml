@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/info_fragment"
+    android:background="?colorSurface"
     android:layout_height="match_parent"
     app:layout_constraintVertical_chainStyle="spread">
 

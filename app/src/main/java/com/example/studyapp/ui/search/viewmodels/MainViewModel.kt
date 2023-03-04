@@ -24,8 +24,15 @@ class MainViewModel : ViewModel() {
         MutableLiveData(listOf())
     val gifImages: LiveData<List<GifModelUI>> = _gifImages
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _searchErrorMessage: MutableLiveData<String> = MutableLiveData("")
     val searchErrorMessage: LiveData<String> = _searchErrorMessage
+
+    private val _searchKeywords: MutableLiveData<String> = MutableLiveData("")
+    val searchKeywords: LiveData<String> = _searchKeywords
+
 
     fun applyComponent(component: SearchComponent) {
         if (!this::gifLoader.isInitialized)
@@ -33,22 +40,44 @@ class MainViewModel : ViewModel() {
     }
 
     fun search(searchRequestUI: SearchRequestUI) {
+        if (_isLoading.value == true) {
+            _searchErrorMessage.value = "Previous request has not been processed yet"
+            return
+        }
+
+        if (_searchKeywords.value != searchRequestUI.keywords) {
+            _searchKeywords.value = searchRequestUI.keywords
+        } else {
+            _isLoading.value = true
+        }
+
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             _searchErrorMessage.postValue(throwable.message)
         }
 
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler)
         {
+            val loading = _isLoading.value
+
             val searchResult = gifLoader.search(searchRequestUI.toModel())
             when (searchResult) {
                 is ResultType.Error -> _searchErrorMessage.postValue(
                     searchResult.message
                 )
-                is ResultType.Ok -> _gifImages.postValue(
-                    searchResult.value
-                        .map { GifModelUI.fromModel(it) }
-                )
+                is ResultType.Ok -> {
+                    val oldList = if (loading != null && loading) {
+                        _gifImages.value ?: listOf()
+                    } else {
+                        listOf()
+                    }
+
+                    _gifImages.postValue( oldList +
+                        searchResult.value
+                            .map { GifModelUI.fromModel(it) }
+                    )
+                }
             }
+            _isLoading.postValue(false)
         }
     }
 

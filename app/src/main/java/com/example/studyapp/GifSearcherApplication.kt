@@ -10,5 +10,4 @@ class GifSearcherApplication: Application() {
 
         appComponent = DaggerAppComponent.create()
     }
-//    val appComponent: AppComponent =
 }

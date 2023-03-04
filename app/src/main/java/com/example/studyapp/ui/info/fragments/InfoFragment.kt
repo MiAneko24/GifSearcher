@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.studyapp.GifSearcherApplication
 import com.example.studyapp.MainActivity
 import com.example.studyapp.R
+import com.example.studyapp.ui.callbacks.SetupToolbarCallback
 import com.example.studyapp.databinding.InfoFragmentBinding
 import com.example.studyapp.di.info.components.InfoComponent
 import com.example.studyapp.ui.info.viewmodels.InfoViewModel
@@ -20,6 +21,7 @@ class InfoFragment: Fragment() {
     lateinit var viewModel: InfoViewModel
 
     private lateinit var fragmentComponent: InfoComponent
+    private lateinit var toolbarCallback: SetupToolbarCallback
 
 
     private var _binding: InfoFragmentBinding? = null
@@ -30,11 +32,8 @@ class InfoFragment: Fragment() {
         fun newInstance() = InfoFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("Creation", "GifInfo OnCreate()")
-
-        setHasOptionsMenu(true)
+    fun setCallback(setupToolbarCallback: SetupToolbarCallback) {
+        toolbarCallback = setupToolbarCallback
     }
 
     override fun onAttach(context: Context) {
@@ -51,16 +50,32 @@ class InfoFragment: Fragment() {
         viewModel.applyComponent(fragmentComponent)
     }
 
+    private fun checkCallback() {
+        if (!this::toolbarCallback.isInitialized ) {
+            val _activity = activity as MainActivity
+            setCallback(_activity)
+        }
+    }
+
+    private fun setupToolbar() {
+        toolbarCallback.setTitle(getString(R.string.gif_info))
+        toolbarCallback.setButtonUpVisibility(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        checkCallback()
+
+        _binding = InfoFragmentBinding.inflate(inflater, container, false)
+        setupToolbar()
+
         viewModel.getInfoErrorMessage.observe(viewLifecycleOwner) {
             if (it.isNotEmpty())
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
-        _binding = InfoFragmentBinding.inflate(inflater, container, false)
 
         viewModel.currentGif.observe(viewLifecycleOwner) {
             Log.d("Net", "CurrentGif changed")
@@ -76,7 +91,7 @@ class InfoFragment: Fragment() {
                 binding.stickerValue.text = it.gifMetadataUI.isSticker.toString()
                 binding.importValue.text = it.gifMetadataUI.importDatetime.toString()
                 binding.trendingValue.text = it.gifMetadataUI.trendingDatetime.toString()
-                binding.appToolbarGifLayout.appToolbar.title = it.gifMetadataUI.title
+                toolbarCallback.setTitle(it.gifMetadataUI.title)
                 Glide.with(binding.gifView).load(it.gif).into(binding.gifView)
             }
         }
@@ -84,17 +99,6 @@ class InfoFragment: Fragment() {
         viewModel.getGifInfo()
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.appToolbarGifLayout.appToolbar.inflateMenu(R.menu.appbar_menu)
-        binding.appToolbarGifLayout.appToolbar.title = getString(R.string.gif_info)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.appbar_menu, menu)
     }
 
 }

@@ -24,15 +24,8 @@ class MainViewModel : ViewModel() {
         MutableLiveData(listOf())
     val gifImages: LiveData<List<GifModelUI>> = _gifImages
 
-    private val _currentGif: MutableLiveData<GifDataUI> =
-        MutableLiveData(GifDataUI())
-    val currentGif: LiveData<GifDataUI> = _currentGif
-
     private val _searchErrorMessage: MutableLiveData<String> = MutableLiveData("")
     val searchErrorMessage: LiveData<String> = _searchErrorMessage
-
-    private val _getInfoErrorMessage: MutableLiveData<String> = MutableLiveData("")
-    val getInfoErrorMessage: LiveData<String> = _getInfoErrorMessage
 
     fun applyComponent(component: SearchComponent) {
         if (!this::gifLoader.isInitialized)
